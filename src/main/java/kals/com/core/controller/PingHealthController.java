@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/{*context-path}/ping")
+@RequestMapping("/ping")
 public class PingHealthController {
 
     @Value("${spring.application.name:}")
