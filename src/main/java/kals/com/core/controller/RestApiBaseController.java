@@ -1,4 +1,4 @@
-package kals.com.core.service;
+package kals.com.core.controller;
 
 import kals.com.core.model.PageResponse;
 import org.springframework.data.domain.Pageable;
@@ -6,10 +6,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface RestApiService<E, D, I, R, M> {
+public interface RestApiBaseController<E, D, I> {
 
-
-    ResponseEntity<PageResponse<D>> getAll(Pageable pageable, String q);
+    PageResponse<D> getAll(Pageable pageable, String q);
 
     ResponseEntity<D> getById(I i);
 
