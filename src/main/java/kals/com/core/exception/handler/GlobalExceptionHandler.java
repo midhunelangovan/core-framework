@@ -42,7 +42,7 @@ public class GlobalExceptionHandler extends BaseException {
             MethodArgumentNotValidException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public @ResponseBody ErrorResponse handlePredefinedException(MethodArgumentNotValidException ex){
+    public @ResponseBody ErrorResponse handlePredefinedException(MethodArgumentNotValidException ex) {
         return ErrorResponse.builder()
                 .errorCode("KALS001")
                 .message("Constraints are not satisfied")

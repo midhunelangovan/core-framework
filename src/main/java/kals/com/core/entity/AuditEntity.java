@@ -4,6 +4,7 @@ import jakarta.annotation.PreDestroy;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import kals.com.core.utility.UserUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -30,18 +31,23 @@ public class AuditEntity implements Serializable {
 
 
     @PrePersist
-    public void preAuditPersist(){
+    public void preAuditPersist() {
         createdDate = ZonedDateTime.now();
+        modifiedDate = ZonedDateTime.now();
+        createdBy = UserUtil.getUserName();
+        modifiedBy = UserUtil.getUserName();
     }
 
     @PreUpdate
-    public void preUpdate(){
+    public void preUpdate() {
         modifiedDate = ZonedDateTime.now();
+        modifiedBy = UserUtil.getUserName();
     }
 
     @PreDestroy
-    public void preDestroy(){
+    public void preDestroy() {
         modifiedDate = ZonedDateTime.now();
+        modifiedBy = "modified" + UserUtil.getUserName();
     }
 
 

@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-public class AbstractCrudService<E, D, I> implements AbstractBaseService<D, I>, AbstractLifeCycleHooks<E, D, I> {
+public class AbstractCrudService<E, D, I> implements AbstractCrudBaseService<D, I>, AbstractLifeCycleHooks<E, D, I> {
 
     private final AbstractBaseRepository<E, I> repository;
 

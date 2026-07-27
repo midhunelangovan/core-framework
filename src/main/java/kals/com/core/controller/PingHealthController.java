@@ -19,7 +19,7 @@ public class PingHealthController {
 
 
     @GetMapping
-    public ApplicationHealthStatus getApplicationStatus(){
+    public ApplicationHealthStatus getApplicationStatus() {
         return ApplicationHealthStatus.builder()
                 .service(applicationName)
                 .version(applicationVersion)
