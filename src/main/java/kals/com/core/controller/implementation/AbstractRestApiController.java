@@ -1,13 +1,11 @@
 package kals.com.core.controller.implementation;
 
 import kals.com.core.controller.RestApiBaseController;
-import kals.com.core.mapper.BaseMapper;
 import kals.com.core.model.PageResponse;
 import kals.com.core.service.AbstractCrudService;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.http.*;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +19,11 @@ import java.util.List;
  * R -> Repository (supports CRUD + Specifications)
  * M -> Mapper (Entity <-> DTO)
  */
-public abstract class AbstractRestApiController<E, D, I, R extends JpaRepository<E, I> & JpaSpecificationExecutor<E>, M extends BaseMapper<E, D>> implements RestApiBaseController<E, D, I> {
+public abstract class AbstractRestApiController<E, D, I> implements RestApiBaseController<E, D, I> {
 
-    private final AbstractCrudService<E, D, I, R, M> service;
+    private final AbstractCrudService<E, D, I> service;
 
-    protected AbstractRestApiController(AbstractCrudService<E, D, I, R, M> service) {
+    protected AbstractRestApiController(AbstractCrudService<E, D, I> service) {
         this.service = service;
     }
 
@@ -41,7 +39,7 @@ public abstract class AbstractRestApiController<E, D, I, R extends JpaRepository
     }
 
     @Override
-    public ResponseEntity<D> create(@RequestBody D d) {
+    public ResponseEntity<D> create(@RequestBody @Validated D d) {
         D res = service.create(d);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }

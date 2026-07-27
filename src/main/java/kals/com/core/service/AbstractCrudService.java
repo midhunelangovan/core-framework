@@ -1,36 +1,28 @@
 package kals.com.core.service;
 
-import kals.com.core.exception.ResourceNotFoundException;
+import kals.com.core.exception.Exceptions.ResourceNotFoundException;
 import kals.com.core.mapper.BaseMapper;
 import kals.com.core.model.PageResponse;
+import kals.com.core.repository.AbstractBaseRepository;
 import kals.com.core.specification.CommonSpecification;
 import kals.com.core.utility.PageUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.Optional;
 
-public class AbstractCrudService
-        <
-                E,
-                D,
-                I,
-                R extends JpaRepository<E, I> & JpaSpecificationExecutor<E>,
-                M extends BaseMapper<E, D>
-                >
-        implements AbstractBaseService<D, I>, AbstractLifeCycleHooks<E, D, I> {
+public class AbstractCrudService<E, D, I> implements AbstractBaseService<D, I>, AbstractLifeCycleHooks<E, D, I> {
 
-    private final R repository;
+    private final AbstractBaseRepository<E, I> repository;
 
-    private final M mapper;
+    private final BaseMapper<E, D> mapper;
 
-    public AbstractCrudService(R repository, M mapper) {
+    public AbstractCrudService(AbstractBaseRepository<E, I> repository, BaseMapper<E, D> mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
+
 
     @Override
     public PageResponse<D> getAll(Pageable pageable, String q) {
@@ -68,11 +60,11 @@ public class AbstractCrudService
             throw new ResourceNotFoundException("AUTH_RES_404");
         }
 
-        E  saved = e.get();
+        E saved = e.get();
 
-        afterGet( saved);
+        afterGet(saved);
 
-        return mapper.toDto( saved);
+        return mapper.toDto(saved);
     }
 
     @Override
@@ -126,12 +118,12 @@ public class AbstractCrudService
         // Convert DTO -> Entity
         E e = mapper.toEntity(d);
 
-        E  saved = repository.save(e);
+        E saved = repository.save(e);
 
-        afterUpdate( saved);
+        afterUpdate(saved);
 
         // Save updated entity
-        return mapper.toDto( saved);
+        return mapper.toDto(saved);
     }
 
     @Override

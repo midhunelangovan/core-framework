@@ -8,8 +8,11 @@ import java.util.Locale;
 
 public class BaseException extends RuntimeException {
 
-    private final String errorCode;
+    private String errorCode;
     private String errorMessage;
+
+    public BaseException(){
+    }
 
     public BaseException(String errorCode) {
         this.errorCode = errorCode;
