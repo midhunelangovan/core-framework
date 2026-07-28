@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller to provide health and status check endpoints.
+ * Very useful for deployment environments to check if the application is alive.
+ */
 @RestController
 @RequestMapping("/ping")
 public class PingHealthController {
@@ -17,7 +21,11 @@ public class PingHealthController {
     @Value("${spring.project.version:}")
     private String applicationVersion;
 
-
+    /**
+     * Endpoint to retrieve the current health status of the application.
+     *
+     * @return an {@link ApplicationHealthStatus} detailing the service name, version, and running status
+     */
     @GetMapping
     public ApplicationHealthStatus getApplicationStatus() {
         return ApplicationHealthStatus.builder()
@@ -28,3 +36,4 @@ public class PingHealthController {
     }
 
 }
+

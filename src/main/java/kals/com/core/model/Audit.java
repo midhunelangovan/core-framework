@@ -5,6 +5,10 @@ import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
+/**
+ * DTO representing standard auditing metadata.
+ * Mirrors the fields found in {@link kals.com.core.entity.AuditEntity}.
+ */
 @Getter
 @Setter
 public class Audit {

@@ -8,6 +8,12 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Generic response wrapper for paginated endpoints.
+ * Contains both the metadata (Page) and the actual payload (content).
+ *
+ * @param <T> the type of elements in the content list
+ */
 @Getter
 @Setter
 @Builder

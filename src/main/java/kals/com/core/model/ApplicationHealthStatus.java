@@ -4,6 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Model representing the health status and metadata of the application.
+ * Typically used by health-check endpoints.
+ */
 @Getter
 @Setter
 @Builder

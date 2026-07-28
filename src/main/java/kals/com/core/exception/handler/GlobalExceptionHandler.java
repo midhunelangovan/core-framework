@@ -16,6 +16,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 
+/**
+ * Centralized exception handler for the entire framework.
+ * Catches application-specific exceptions and predefined framework exceptions,
+ * converting them into standardized {@link ErrorResponse} objects with appropriate HTTP status codes.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler extends BaseException {
 

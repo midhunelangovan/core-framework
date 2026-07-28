@@ -2,6 +2,9 @@ package kals.com.core.exception.Exceptions;
 
 import kals.com.core.exception.BaseException;
 
+/**
+ * Exception thrown when an operation violates data integrity constraints (e.g. duplicate keys).
+ */
 public class DataIntegrityViolationException extends BaseException {
 
     public DataIntegrityViolationException(String errorCode, String errorMessage) {

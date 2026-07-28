@@ -6,6 +6,10 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * Standardized error response model used by the GlobalExceptionHandler.
+ * Ensures API clients receive a consistent error format.
+ */
 @Getter
 @Setter
 @Builder

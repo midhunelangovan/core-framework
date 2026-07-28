@@ -4,6 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Metadata model representing pagination details.
+ * Used internally and within PageResponse to convey pagination state to clients.
+ */
 @Getter
 @Setter
 @Builder

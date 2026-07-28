@@ -12,12 +12,26 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Base abstract service implementation for CRUD operations.
+ * Implements both core CRUD functionalities and lifecycle hooks.
+ * 
+ * @param <E> the entity type
+ * @param <D> the DTO type
+ * @param <I> the identifier type
+ */
 public class AbstractCrudService<E, D, I> implements AbstractCrudBaseService<D, I>, AbstractLifeCycleHooks<E, D, I> {
 
     private final AbstractBaseRepository<E, I> repository;
 
     private final BaseMapper<E, D> mapper;
 
+    /**
+     * Constructs a new AbstractCrudService.
+     * 
+     * @param repository the base repository for the entity
+     * @param mapper the mapper for converting between entity and DTO
+     */
     public AbstractCrudService(AbstractBaseRepository<E, I> repository, BaseMapper<E, D> mapper) {
         this.repository = repository;
         this.mapper = mapper;

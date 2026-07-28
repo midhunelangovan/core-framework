@@ -1,6 +1,5 @@
 package kals.com.core.specification;
 
-
 import jakarta.annotation.Nullable;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -19,16 +18,37 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ * Dynamic specification builder for parsing custom search queries into JPA
+ * Predicates.
+ * Supports logical operators (AND, OR), parentheses grouping, and various
+ * comparison operators
+ * (e.g., equals, not equals, in).
+ *
+ * @param <T> the entity type to build specifications for
+ */
 public class CommonSpecification<T> implements Specification<T> {
 
     private final String query;
     private final Map<String, Integer> precedenceMap = Map.of("OR", 1, "AND", 2);
 
+    /**
+     * Constructs a specification with the given search query.
+     *
+     * @param query the query string (e.g. "status:ACTIVE AND (age:25 OR age:30)")
+     */
     public CommonSpecification(String query) {
         this.query = query;
     }
 
+    /**
+     * Converts the parsed query string into a JPA Predicate.
+     *
+     * @param root            the root entity
+     * @param cbQuery         the criteria query
+     * @param criteriaBuilder the criteria builder
+     * @return the constructed predicate, or null if the query is empty
+     */
     @Override
     public @Nullable Predicate toPredicate(Root<T> root, CriteriaQuery<?> cbQuery, CriteriaBuilder criteriaBuilder) {
 
@@ -60,7 +80,7 @@ public class CommonSpecification<T> implements Specification<T> {
         List<String> output = new ArrayList<>();
         Stack<String> operatorsStack = new Stack<>();
 
-        //to match regex
+        // to match regex
         Pattern tokenPattern = Pattern.compile("\\(|\\)|AND|OR|[\\w\\.]+:\"[^\"]*\"|[\\w\\.]+:[^\\s()]+");
         Matcher matcher = tokenPattern.matcher(query);
 
@@ -81,7 +101,8 @@ public class CommonSpecification<T> implements Specification<T> {
                     operatorsStack.pop();
                 }
             } else if (chunk.equalsIgnoreCase("AND") || chunk.equalsIgnoreCase("OR")) {
-                while (!operatorsStack.isEmpty() && precedenceMap.get(chunk.toUpperCase()) <= precedenceMap.getOrDefault(operatorsStack.peek().toUpperCase(), 0)) {
+                while (!operatorsStack.isEmpty() && precedenceMap.get(chunk.toUpperCase()) <= precedenceMap
+                        .getOrDefault(operatorsStack.peek().toUpperCase(), 0)) {
                     output.add(operatorsStack.pop());
                 }
                 operatorsStack.push(chunk);
@@ -96,7 +117,6 @@ public class CommonSpecification<T> implements Specification<T> {
 
         return output;
     }
-
 
     private Predicate buildQuery(Root<T> root, CriteriaBuilder criteriaBuilder, String chunk) {
 
@@ -123,7 +143,8 @@ public class CommonSpecification<T> implements Specification<T> {
             boolean isEnum = Enum.class.isAssignableFrom(fieldType);
             boolean isBoolean = fieldType.equals(Boolean.class);
             if (isEnum) {
-                return criteriaBuilder.equal(getRootPath(root, fieldName), Enum.valueOf((Class<Enum>) fieldType, value.toUpperCase()));
+                return criteriaBuilder.equal(getRootPath(root, fieldName),
+                        Enum.valueOf((Class<Enum>) fieldType, value.toUpperCase()));
             } else if (isBoolean) {
                 return criteriaBuilder.equal(getRootPath(root, fieldName), Boolean.valueOf(value));
             }
@@ -133,7 +154,6 @@ public class CommonSpecification<T> implements Specification<T> {
         return null;
 
     }
-
 
     private Path<?> getRootPath(Root<T> root, String fieldName) {
         if (fieldName.contains(".")) {

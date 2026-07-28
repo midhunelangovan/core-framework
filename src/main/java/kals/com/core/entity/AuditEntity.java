@@ -15,6 +15,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+/**
+ * Base JPA mapped superclass providing auditing capabilities.
+ * Tracks creation and modification timestamps and user details.
+ * Entities extending this class will automatically inherit these audit fields.
+ */
 @Getter
 @Setter
 @MappedSuperclass

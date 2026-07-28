@@ -14,18 +14,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 /**
- * Generic REST API implementation.
+ * Generic REST API abstract implementation.
+ * Provides standard endpoints by delegating to an underlying CRUD service.
  * <p>
  * E -> Entity
  * D -> DTO/Domain Model
  * I -> Identifier type (Long, UUID, String, etc.)
- * R -> Repository (supports CRUD + Specifications)
- * M -> Mapper (Entity <-> DTO)
  */
 public abstract class AbstractRestApiController<E, D, I> implements RestApiBaseController<E, D, I> {
 
     private final AbstractCrudService<E, D, I> service;
 
+    /**
+     * Constructs a new AbstractRestApiController.
+     *
+     * @param service the CRUD service to handle business logic
+     */
     protected AbstractRestApiController(AbstractCrudService<E, D, I> service) {
         this.service = service;
     }
@@ -36,36 +40,33 @@ public abstract class AbstractRestApiController<E, D, I> implements RestApiBaseC
     }
 
     @Override
-    public ResponseEntity<D> getById(@PathVariable("id") I i) {
-        D d = service.getById(i);
-        return new ResponseEntity<>(d, HttpStatus.OK);
+    public ResponseEntity<D> getById(@PathVariable("id") I id) {
+        D dto = service.getById(id);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<D> create(@RequestBody @Validated D d) {
-        D res = service.create(d);
+    public ResponseEntity<D> create(@RequestBody @Validated D dto) {
+        D res = service.create(dto);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<List<D>> createAll(@RequestBody List<D> d) {
-
-        List<D> dList = service.createAll(d);
+    public ResponseEntity<List<D>> createAll(@RequestBody List<D> dtos) {
+        List<D> dList = service.createAll(dtos);
         return new ResponseEntity<>(dList, HttpStatus.CREATED);
     }
 
-
     @Override
-    public ResponseEntity<D> update(@RequestBody D d, @PathVariable("id") I i) {
-        D res = service.update(d, i);
-        return new ResponseEntity<>(res, HttpStatus.CREATED);
+    public ResponseEntity<D> update(@RequestBody D dto, @PathVariable("id") I id) {
+        D res = service.update(dto, id);
+        return new ResponseEntity<>(res, HttpStatus.CREATED); // Note: Could be OK (200) based on REST conventions
     }
 
-
     @Override
-    public ResponseEntity<Void> delete(@PathVariable("id") I i) {
-        service.delete(i);
+    public ResponseEntity<Void> delete(@PathVariable("id") I id) {
+        service.delete(id);
         // HTTP 204 No Content
         return ResponseEntity.noContent().build();
     }
-}
+}
