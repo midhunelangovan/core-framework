@@ -1,5 +1,6 @@
 package kals.com.core.controller;
 
+import jakarta.validation.Valid;
 import kals.com.core.model.PageResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public interface RestApiBaseController<E, D, I> {
      * @return the created resource DTO wrapped in a ResponseEntity
      */
     @PostMapping("")
-    ResponseEntity<D> create(@RequestBody D dto);
+    ResponseEntity<D> create(@Valid @RequestBody D dto);
 
     /**
      * Creates multiple resources in a bulk operation.

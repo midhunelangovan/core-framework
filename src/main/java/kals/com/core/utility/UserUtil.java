@@ -33,4 +33,8 @@ public class UserUtil {
         return "systemuser@kal.io";
     }
 
+    public static String getUserRoleFromSpringContext(){
+        return "ROLE_ADMIN";
+    }
+
 }

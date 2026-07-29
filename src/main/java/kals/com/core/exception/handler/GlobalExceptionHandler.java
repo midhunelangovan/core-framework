@@ -3,6 +3,7 @@ package kals.com.core.exception.handler;
 import kals.com.core.exception.BaseException;
 import kals.com.core.exception.Exceptions.*;
 import kals.com.core.model.ErrorResponse;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import java.time.LocalDateTime;
+import java.util.Locale;
 
 
 /**
@@ -54,6 +58,20 @@ public class GlobalExceptionHandler extends BaseException {
                 .build();
     }
 
+    @ExceptionHandler(
+            org.springframework.dao.DataIntegrityViolationException.class
+    )
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public @ResponseBody ErrorResponse handleDataIntegrityViolationException(org.springframework.dao.DataIntegrityViolationException ex) {
+        String errorCode = ex.getCause() instanceof ConstraintViolationException ? ((ConstraintViolationException) ex.getCause()).getConstraintName() : ex.getMessage();
+        String errorMessage = errorCode != null? messageSource.getMessage(errorCode,null, Locale.ENGLISH) : ex.getMessage();
+        return ErrorResponse.builder()
+                .errorCode(errorCode)
+                .message(errorMessage)
+                .build();
+    }
+
+
     @ExceptionHandler({
             AccessDeniedException.class
     })
@@ -81,7 +99,6 @@ public class GlobalExceptionHandler extends BaseException {
             UserException.class,
             DataIntegrityViolationException.class,
             DataValidationException.class,
-            org.springframework.dao.DataIntegrityViolationException.class
     })
     @ResponseStatus(HttpStatus.CONFLICT)
     public @ResponseBody ErrorResponse handleConflictException(BaseException exception) {
@@ -121,8 +138,12 @@ public class GlobalExceptionHandler extends BaseException {
             HttpRequestMethodNotSupportedException.class
     })
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public @ResponseBody ErrorResponse handleMethodNotFoundException(BaseException exception) {
-        return exception.handleExceptionResponse(messageSource);
+    public @ResponseBody ErrorResponse handleMethodNotFoundException(Exception exception) {
+        return ErrorResponse.builder()
+                .errorCode("BAD_REQUEST")
+                .message(exception.getMessage())
+                .timeStamp(LocalDateTime.now())
+                .build();
     }
 
 }

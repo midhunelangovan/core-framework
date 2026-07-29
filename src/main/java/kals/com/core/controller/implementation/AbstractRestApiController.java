@@ -1,8 +1,10 @@
 package kals.com.core.controller.implementation;
 
+import jakarta.validation.Valid;
 import kals.com.core.controller.RestApiBaseController;
 import kals.com.core.model.PageResponse;
 import kals.com.core.service.AbstractCrudService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,8 @@ import java.util.List;
  */
 public abstract class AbstractRestApiController<E, D, I> implements RestApiBaseController<E, D, I> {
 
-    private final AbstractCrudService<E, D, I> service;
+    @Autowired
+    AbstractCrudService<E, D, I> service;
 
     /**
      * Constructs a new AbstractRestApiController.
@@ -46,7 +49,7 @@ public abstract class AbstractRestApiController<E, D, I> implements RestApiBaseC
     }
 
     @Override
-    public ResponseEntity<D> create(@RequestBody @Validated D dto) {
+    public ResponseEntity<D> create(@Valid @RequestBody D dto) {
         D res = service.create(dto);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
@@ -69,4 +72,4 @@ public abstract class AbstractRestApiController<E, D, I> implements RestApiBaseC
         // HTTP 204 No Content
         return ResponseEntity.noContent().build();
     }
-}
+}

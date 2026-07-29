@@ -6,6 +6,7 @@ import kals.com.core.model.PageResponse;
 import kals.com.core.repository.AbstractBaseRepository;
 import kals.com.core.specification.CommonSpecification;
 import kals.com.core.utility.PageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,9 +23,11 @@ import java.util.Optional;
  */
 public class AbstractCrudService<E, D, I> implements AbstractCrudBaseService<D, I>, AbstractLifeCycleHooks<E, D, I> {
 
-    private final AbstractBaseRepository<E, I> repository;
+    @Autowired
+    AbstractBaseRepository<E, I> repository;
 
-    private final BaseMapper<E, D> mapper;
+    @Autowired
+    BaseMapper<E, D> mapper;
 
     /**
      * Constructs a new AbstractCrudService.

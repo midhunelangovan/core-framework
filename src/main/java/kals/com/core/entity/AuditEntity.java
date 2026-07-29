@@ -1,6 +1,7 @@
 package kals.com.core.entity;
 
 import jakarta.annotation.PreDestroy;
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -26,8 +27,10 @@ import java.time.ZonedDateTime;
 public class AuditEntity implements Serializable {
 
     @CreatedDate
+    @Column(name = "created_at")
     private ZonedDateTime createdDate;
     @LastModifiedDate
+    @Column(name = "modified_at")
     private ZonedDateTime modifiedDate;
     @CreatedBy
     private String createdBy;
