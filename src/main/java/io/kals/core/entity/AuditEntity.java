@@ -1,11 +1,11 @@
 package io.kals.core.entity;
 
+import io.kals.security.utils.UserUtil;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import io.kals.core.utility.UserUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -55,7 +55,7 @@ public class AuditEntity implements Serializable {
     @PreDestroy
     public void preDestroy() {
         modifiedDate = ZonedDateTime.now();
-        modifiedBy = "modified" + UserUtil.getUserName();
+        modifiedBy = UserUtil.getUserName();
     }
 
 

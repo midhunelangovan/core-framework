@@ -1,5 +1,8 @@
 package io.kals.core.controller.implementation;
 
+import io.kals.security.aspect.IsAdmin;
+import io.kals.security.aspect.IsEditor;
+import io.kals.security.aspect.IsReader;
 import jakarta.validation.Valid;
 import io.kals.core.controller.RestApiBaseController;
 import io.kals.core.model.PageResponse;
@@ -22,7 +25,9 @@ import java.util.List;
  * D -> DTO/Domain Model
  * I -> Identifier type (Long, UUID, String, etc.)
  */
-public abstract class AbstractRestApiController<E, D, I> implements RestApiBaseController<E, D, I> {
+public abstract class RestApiControllerImpl<E, D, I> implements RestApiBaseController<E, D, I> {
+
+    private final String resourceName;
 
     @Autowired
     AbstractCrudService<E, D, I> service;
@@ -32,43 +37,43 @@ public abstract class AbstractRestApiController<E, D, I> implements RestApiBaseC
      *
      * @param service the CRUD service to handle business logic
      */
-    protected AbstractRestApiController(AbstractCrudService<E, D, I> service) {
+    protected RestApiControllerImpl(String resourceName, AbstractCrudService<E, D, I> service) {
+        this.resourceName = resourceName;
         this.service = service;
     }
 
-    @Override
+    @IsReader(resourceName = "#{resourceName}")
     public PageResponse<D> getAll(Pageable pageable, @RequestParam(value = "q", required = false) String q) {
         return service.getAll(pageable, q);
     }
 
-    @Override
+    @IsReader(resourceName = "#{resourceName}")
     public ResponseEntity<D> getById(@PathVariable("id") I id) {
         D dto = service.getById(id);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @Override
+    @IsAdmin(resourceName = "#{resourceName}")
     public ResponseEntity<D> create(@Valid @RequestBody D dto) {
         D res = service.create(dto);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @Override
+    @IsAdmin(resourceName = "#{resourceName}")
     public ResponseEntity<List<D>> createAll(@RequestBody List<D> dtos) {
         List<D> dList = service.createAll(dtos);
         return new ResponseEntity<>(dList, HttpStatus.CREATED);
     }
 
-    @Override
+    @IsEditor(resourceName = "#{resourceName}")
     public ResponseEntity<D> update(@RequestBody D dto, @PathVariable("id") I id) {
         D res = service.update(dto, id);
-        return new ResponseEntity<>(res, HttpStatus.CREATED); // Note: Could be OK (200) based on REST conventions
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @Override
+    @IsEditor(resourceName = "#{resourceName}")
     public ResponseEntity<Void> delete(@PathVariable("id") I id) {
         service.delete(id);
-        // HTTP 204 No Content
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,5 +1,6 @@
 package io.kals.core.controller;
 
+import io.kals.security.aspect.IsReader;
 import jakarta.validation.Valid;
 import io.kals.core.model.PageResponse;
 import org.springframework.data.domain.Pageable;
